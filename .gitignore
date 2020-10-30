@@ -1,0 +1,18 @@
+# Python
+*.py[cod]
+
+# Editor
+*.sw[op]
+
+# Project
+/tmp
+/venv
+*.egg-info
+
+ldap_sync.cfg
+
+# Test
+/dist
+/build
+
+.vscode/
