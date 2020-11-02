@@ -13,6 +13,13 @@ class BambooHR:
     def __init__(self, config):
         self.config = config
 
+    def filter(self, employee):
+        for f in self.config.bamboohr.filters.split(','):
+            attr, value = f.split(':')
+            if employee.get(attr) == value:
+                return True
+        return False
+
     def get_user_data(self):
         """API reference https://documentation.bamboohr.com/reference"""
 
@@ -23,6 +30,9 @@ class BambooHR:
         employees = r.json().get('employees', [])
 
         for employee in employees:
+            if not self.filter(employee):
+                continue
+
             username = (employee.get('preferredName', '') or '').lower() or (employee.get('firstName', '') or '').lower()
             email = (employee.get('workEmail') or
                      '%s.%s@%s' % (employee.get('firstName').lower(),
