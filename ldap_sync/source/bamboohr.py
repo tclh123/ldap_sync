@@ -34,14 +34,18 @@ class BambooHR:
                 continue
 
             username = (employee.get('preferredName', '') or '').lower() or (employee.get('firstName', '') or '').lower()
+            firstname = employee.get('firstName')
+            lastname = employee.get('lastName')
             email = (employee.get('workEmail') or
-                     '%s.%s@%s' % (employee.get('firstName').lower(),
-                                   employee.get('lastName').lower(),
+                     '%s.%s@%s' % (firstname.lower(),
+                                   lastname.lower(),
                                    self.config.bamboohr.company_email_domain))
             user = User(username=username,
-                        firstname=employee.get('firstName'),
-                        lastname=employee.get('lastName'),
+                        firstname=firstname,
+                        lastname=lastname,
+                        display_name=employee.get('displayName') or f'{firstname} {lastname}',
                         email=email,
+                        id=employee.get('id'),
                         title=employee.get('jobTitle'),
                     )
 
