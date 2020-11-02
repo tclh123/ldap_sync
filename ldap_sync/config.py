@@ -1,12 +1,25 @@
-from configparser import ConfigParser
+import configparser
 
 
 class Config:
     def __init__(self, path):
         self.path = path
-        self.configparser = ConfigParser()
-        self.configparser.read(path)
+        self.parser = configparser.ConfigParser()
+        self.parser.read(path)
 
-    # TODO:
-    def get(self, section, key):
-        return self.configparser.get(section, key)
+    def get(self, section, key, **kw):
+        return self.parser.get(section, key, **kw)
+
+    def __getattr__(self, section):
+        if section not in self.parser.sections():
+            raise configparser.NoSectionError
+        return ConfigSection(self.parser, section)
+
+
+class ConfigSection:
+    def __init__(self, parser, section):
+        self.parser = parser
+        self.section = section
+
+    def __getattr__(self, option):
+        return self.parser.get(self.section, option)
