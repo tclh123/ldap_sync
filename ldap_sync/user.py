@@ -1,8 +1,9 @@
 from typing import Optional
-from random import sample
 from dataclasses import dataclass
 
 from ldap_sync.consts import RANDOM_PASSWORD_LENGTH
+from ldap_sync.utils import generate_random_string
+
 
 @dataclass
 class User:
@@ -16,8 +17,7 @@ class User:
     password: Optional[str] = None
 
     def generate_password(self, length=RANDOM_PASSWORD_LENGTH):
-        seed = '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
-        self.password = ''.join(sample(seed, length))
+        self.password = generate_random_string(length)
 
     def __eq__(self, other):
         # consider this as the same user

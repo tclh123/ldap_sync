@@ -1,9 +1,12 @@
+import base64
+import hashlib
 import logging
 
 import ldap
 import ldap.modlist
 
 from ldap_sync.user import User
+from ldap_sync.utils import generate_random_string
 
 logger = logging.getLogger(__name__)
 
@@ -91,7 +94,7 @@ class LDAP:
             'title': [user.title],
             'mail': [user.email],
             'employeeNumber': [user.id],
-            'userPassword': [user.password],
+            'userPassword': [ldap_hashed_passwd(user.password)],
         }
         logger.info('ldap add %s, record: %s', dn, record)
         # all attribute values must be list of bytes
@@ -107,3 +110,11 @@ def record_convert_bytes(record):
             return i.decode('utf-8')
         return i
     return {k: [f(i) for i in v] for k, v in record.items()}
+
+
+def ldap_hashed_passwd(password):
+    """Generate hashed passwords."""
+    salt = generate_random_string().encode()
+    h = hashlib.sha1(password.encode())
+    h.update(salt)
+    return '{SSHA}' + base64.b64encode(h.digest() + salt).decode()
