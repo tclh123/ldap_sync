@@ -1,8 +1,12 @@
 [global]
 
 [ldap]
+people_dn = ou=people,dc=example,dc=com
 bind_dn = cn=root,dc=example,dc=com
 bind_password = password
 
 [bamboohr]
 company_domain = mycompany
+apikey = 0000000000000000000000000000000000000000
+company_email_domain = example.com
+filters = department:Tech,displayName:Harry Potter,preferredName:Harry

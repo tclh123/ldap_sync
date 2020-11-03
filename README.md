@@ -4,12 +4,21 @@ Sync user data from a HR management system to a LDAP server.
 
 ## Installation
 
-TODO:
+TODO: publish to pypi
 
 ```
 pip install ldap_sync
+```
 
-ldap_sync -s bamboohr -d ldap://ldap.example.com
+## Usage
+
+```
+# edit the config
+cp ldap_sync.cfg.example ldap_sync.cfg
+vi ldap_sync.cfg
+
+# run the command
+ldap_sync -s bamboohr -d ldap://ldap.example.com -f ldap_sync.cfg
 ```
 
 ## Development
