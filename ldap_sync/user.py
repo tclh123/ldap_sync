@@ -21,5 +21,8 @@ class User:
 
     def __eq__(self, other):
         # consider this as the same user
+        return self.id == other.id
+
+    def same_name(self, other):
         return all(getattr(other, attr) == getattr(self, attr)
                for attr in ['firstname', 'lastname', 'username'])

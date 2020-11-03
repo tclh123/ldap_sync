@@ -60,7 +60,6 @@ class LDAP:
     def add_user(self, user: User):
         logger.info('Ldap.add_user(%s)', user)
 
-        # TODO: use id to distinguish
         exist_user = self.get_user(user.username)
         if exist_user:
             # the same user, don't add
