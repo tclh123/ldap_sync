@@ -42,8 +42,13 @@ class LDAP:
         ret = self.l.search_s(dn, ldap.SCOPE_SUBTREE, search_filter)
         return ret
 
-    def get_user(self, username):
-        ret = self.search(self.people_dn, 'cn', username)
+    def get_user(self, username=None, id_=None):
+        if username is not None:
+            ret = self.search(self.people_dn, 'cn', username)
+        elif id_ is not None:
+            ret = self.search(self.people_dn, 'employeeNumber', id_)
+        else:
+            ret = None
         if not ret:
             return None
         dn, record = ret[0]
@@ -61,9 +66,9 @@ class LDAP:
         return user
 
     def add_user(self, user: User):
-        logger.info('Ldap.add_user(%s)', user)
+        logger.debug('Ldap.add_user(%s)', user)
 
-        exist_user = self.get_user(user.username)
+        exist_user = self.get_user(id_=user.id) or self.get_user(username=user.username)
         if exist_user:
             # the same user, don't add
             if exist_user == user:
@@ -96,7 +101,7 @@ class LDAP:
             'employeeNumber': [user.id],
             'userPassword': [ldap_hashed_passwd(user.password)],
         }
-        logger.info('ldap add %s, record: %s', dn, record)
+        logger.info('LDAP add %s, record: %s', dn, record)
         # all attribute values must be list of bytes
         self.l.add_s(dn, ldap.modlist.addModlist(record_convert_bytes(record)))
 
